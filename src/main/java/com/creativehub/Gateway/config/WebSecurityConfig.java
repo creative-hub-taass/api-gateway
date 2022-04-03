@@ -1,52 +1,45 @@
 package com.creativehub.Gateway.config;
 
-import com.creativehub.Gateway.config.filters.CustomAuthorizationFilter;
-import com.creativehub.Gateway.util.AuthenticationToken;
-import com.creativehub.Gateway.util.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.creativehub.Gateway.config.filters.JwtTokenAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
+@Configuration
+@EnableWebSecurity(debug = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final String url = "192.168.49.2";
+
+    @Autowired
+    private JwtAuthenticationConfig config;
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(url);
-            }
-        };
+    public JwtAuthenticationConfig jwtConfig() {
+        return new JwtAuthenticationConfig();
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
                 .csrf().disable()
-                .headers(HeadersConfigurer::cacheControl)
+                .logout().disable()
+                .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling().authenticationEntryPoint(
+                        (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .and()
+                .addFilterBefore(new JwtTokenAuthenticationFilter(config),
+                        UsernamePasswordAuthenticationFilter.class);
+
 
     }
+
 }

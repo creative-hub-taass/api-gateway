@@ -7,9 +7,9 @@ spec:
     app: zuul-server
   type: LoadBalancer
   ports:
-    - port: 80
-      targetPort: 8080
-
+    - port: 8443
+      targetPort: 8443
+      nodePort: 30000
 
 ---
 apiVersion: apps/v1
@@ -32,4 +32,4 @@ spec:
         - name: zuul-server
           image: ghcr.io/creative-hub-taass/zuul-proxy
           ports:
-            - containerPort: 8080
+            - containerPort: 8443
