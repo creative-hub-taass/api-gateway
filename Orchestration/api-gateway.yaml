@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: zuul-server
+  name: api-gateway
 spec:
   selector:
-    app: zuul-server
+    app: api-gateway
   type: LoadBalancer
   ports:
     - port: 8443
@@ -15,21 +15,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zuul-server
+  name: api-gateway
   labels:
-    app: zuul-server
+    app: api-gateway
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: zuul-server
+      app: api-gateway
   template:
     metadata:
       labels:
-        app: zuul-server
+        app: api-gateway
     spec:
       containers:
-        - name: zuul-server
-          image: ghcr.io/creative-hub-taass/zuul-proxy
+        - name: api-gateway
+          image: ghcr.io/creative-hub-taass/api-gateway
           ports:
             - containerPort: 8443
