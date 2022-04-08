@@ -1,7 +1,7 @@
 package com.creativehub.backend.config;
 
 import com.creativehub.backend.config.filters.JwtTokenAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,11 +12,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.http.HttpServletResponse;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity(debug = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	private final JwtAuthenticationConfig config;
+	@Autowired
+	private JwtAuthenticationConfig config;
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
