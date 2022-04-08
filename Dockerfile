@@ -1,16 +1,16 @@
-#
-# Build stage
-#
-FROM maven:3.6.0-jdk-11-slim AS build
-COPY src /home/app/src
-COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
+# syntax=docker/dockerfile:1.2
+FROM maven:3.8.4-openjdk-17-slim AS build
+WORKDIR /app
+USER root
+COPY pom.xml .
+COPY src ./src
+RUN --mount=type=cache,target=/root/.m2 mvn -B -Dmaven.test.skip clean package
 
 #
 # Package stage
 #
-FROM openjdk:12-jdk-alpine
-ARG JAR_FILE=/home/app/target/*.jar
-COPY --from=build ${JAR_FILE} api-gateway.jar
+FROM openjdk:17-alpine
+WORKDIR /app
 EXPOSE 8443
-ENTRYPOINT ["java","-jar","/api-gateway.jar"]
+COPY --from=build /app/target/*.jar appbootrest.jar
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "appbootrest.jar"]

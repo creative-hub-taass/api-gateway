@@ -1,0 +1,9 @@
+version: "3"
+services:
+  api-gateway:
+    build: .
+    image: creative-hub/api-gateway:latest
+    ports:
+      - "443:8443"
+    environment:
+      - JWT_SECRET=7638792F423F4528472B4B6250655368566D597133743677397A24432646294A
