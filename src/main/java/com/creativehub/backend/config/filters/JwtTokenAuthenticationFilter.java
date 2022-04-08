@@ -4,6 +4,7 @@ import com.creativehub.backend.config.JwtAuthenticationConfig;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,8 +18,9 @@ import java.text.ParseException;
 /**
  * Authenticate requests with header 'Authorization: Bearer jwt-token'.
  */
+@RequiredArgsConstructor
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
-	private final JwtAuthenticationConfig config = new JwtAuthenticationConfig();
+	private final JwtAuthenticationConfig config;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain filterChain) throws ServletException, IOException {

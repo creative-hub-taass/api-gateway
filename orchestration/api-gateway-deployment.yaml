@@ -19,7 +19,7 @@ spec:
         - env:
             - name: JWT_SECRET
               value: 7638792F423F4528472B4B6250655368566D597133743677397A24432646294A
-          image: creative-hub/api-gateway:latest
+          image: ghcr.io/creative-hub-taass/api-gateway:latest
           name: api-gateway
           ports:
             - containerPort: 8443
