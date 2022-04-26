@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
  */
 @Getter
 public class JwtAuthenticationConfig {
-	@Value("${security.jwt.url}")
-	private String url;
+	@Value("${security.jwt.urlAuth}")
+	private String urlAuth;
+
+	@Value("${security.jwt.urlHome}")
+	private String urlHome;
 
 	@Value("${security.jwt.header}")
 	private String header;
