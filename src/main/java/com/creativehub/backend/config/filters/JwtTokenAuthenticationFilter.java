@@ -25,7 +25,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain filterChain) throws ServletException, IOException {
 		String token = req.getHeader(config.getHeader());
-		if (req.getServletPath().contains(config.getUrl())) {
+		if (req.getServletPath().contains(config.getUrlAuth()) || req.getServletPath().contains(config.getUrlHome())) {
 			filterChain.doFilter(req, rsp);
 		} else if (token != null && token.startsWith(config.getPrefix() + " ")) {
 			token = token.replace(config.getPrefix() + " ", "");
