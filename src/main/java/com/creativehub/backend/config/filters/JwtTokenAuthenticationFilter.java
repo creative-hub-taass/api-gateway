@@ -27,7 +27,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain filterChain) throws ServletException, IOException {
 		if (REGEX.matcher(req.getServletPath()).matches()) {
-			rsp.setHeader("Access-Control-Allow-Headers","*");
 			filterChain.doFilter(req, rsp);
 		} else {
 			String token = req.getHeader(config.getHeader());
