@@ -26,6 +26,8 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain filterChain) throws ServletException, IOException {
+		rsp.addHeader("Access-Control-Expose-Headers", "X-ACCESS-TOKEN");
+		rsp.addHeader("Access-Control-Expose-Headers", "X-REFRESH-TOKEN");
 		if (REGEX.matcher(req.getServletPath()).matches()) {
 			filterChain.doFilter(req, rsp);
 		} else {
