@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -28,7 +29,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain filterChain) throws ServletException, IOException {
 		rsp.addHeader("Access-Control-Expose-Headers", "X-ACCESS-TOKEN");
 		rsp.addHeader("Access-Control-Expose-Headers", "X-REFRESH-TOKEN");
-		if (REGEX.matcher(req.getServletPath()).matches()) {
+		if (canPassThrough(req)) {
 			filterChain.doFilter(req, rsp);
 		} else {
 			String token = req.getHeader(config.getHeader());
@@ -39,6 +40,10 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 				} else rsp.sendError(HttpStatus.SC_UNAUTHORIZED);
 			} else rsp.sendError(HttpStatus.SC_UNAUTHORIZED);
 		}
+	}
+
+	private boolean canPassThrough(HttpServletRequest req) {
+		return Objects.equals(req.getMethod(), "OPTIONS") || REGEX.matcher(req.getServletPath()).matches();
 	}
 
 	private boolean checkToken(String token) {
